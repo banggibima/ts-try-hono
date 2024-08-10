@@ -11,11 +11,15 @@ export const getUsersDB = async () => {
 };
 
 export const getUserByIdDB = async (id: string) => {
-  const users = await sql`
+  const user = await sql`
     SELECT id, username, password, created_at, updated_at FROM users WHERE id = ${id}
   `;
 
-  return users.length ? users[0] : null;
+  if (user.length === 0) {
+    return null;
+  }
+
+  return user[0];
 };
 
 export const insertUserDB = async (payload: User) => {
@@ -27,7 +31,11 @@ export const insertUserDB = async (payload: User) => {
     RETURNING id, username, password, created_at, updated_at
   `;
 
-  return user;
+  if (user.length === 0) {
+    return null;
+  }
+
+  return user[0];
 };
 
 export const updateUserDB = async (id: string, payload: User) => {
@@ -38,13 +46,21 @@ export const updateUserDB = async (id: string, payload: User) => {
     RETURNING id, username, password, created_at, updated_at
   `;
 
-  return user;
+  if (user.length === 0) {
+    return null;
+  }
+
+  return user[0];
 };
 
 export const deleteUserDB = async (id: string) => {
   const user = await sql`
-    DELETE FROM users WHERE id = ${id} RETURNING id, username, password
+    DELETE FROM users WHERE id = ${id} RETURNING id, username, password, created_at, updated_at
   `;
 
-  return user;
+  if (user.length === 0) {
+    return null;
+  }
+
+  return user[0];
 };
