@@ -23,11 +23,13 @@ export const getUserByIdDB = async (id: string) => {
 };
 
 export const insertUserDB = async (payload: User) => {
-  payload.id = uuid();
+  let { id, username, password } = payload;
+
+  id = uuid();
 
   const user = await sql`
     INSERT INTO users (id, username, password, created_at, updated_at)
-    VALUES (${payload.id}, ${payload.username}, ${payload.password}, NOW(), NOW())
+    VALUES (${id}, ${username}, ${password}, NOW(), NOW())
     RETURNING id, username, password, created_at, updated_at
   `;
 
@@ -39,9 +41,11 @@ export const insertUserDB = async (payload: User) => {
 };
 
 export const updateUserDB = async (id: string, payload: User) => {
+  let { username, password } = payload;
+
   const user = await sql`
     UPDATE users 
-    SET username = ${payload.username}, password = ${payload.password}, updated_at = NOW()
+    SET username = ${username}, password = ${password}, updated_at = NOW()
     WHERE id = ${id}
     RETURNING id, username, password, created_at, updated_at
   `;

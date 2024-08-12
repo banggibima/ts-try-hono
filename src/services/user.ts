@@ -32,8 +32,6 @@ export const updateUserService = async (id: string, payload: User) => {
 
   const user = Object.assign(exist, payload);
 
-  console.log(user);
-
   return await updateUserDB(id, user);
 };
 
